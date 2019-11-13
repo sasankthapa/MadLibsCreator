@@ -4,6 +4,8 @@ from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
+#def playGame(madlib):
+
 def initializeStopWords():
     global stop_words
     stop_words=set(stopwords.words("english"))
@@ -14,7 +16,6 @@ def processTag(tag):
 
 filename=input("Enter name of file:  ")
 initializeStopWords()
-print(stop_words)
 
 if not os.path.isfile(filename):
     print("error filenot found")
@@ -23,11 +24,11 @@ if not os.path.isfile(filename):
 file=open(filename,'r')
 lines=file.readlines()
 lines=[line.strip() for line in lines]
+madlib=""
 
 for line in lines:
-    print(line)
-    x=sent_tokenize(line)
-    for a in x:
+    sentences=sent_tokenize(line)
+    for a in sentences:
         choices=[]
         words=word_tokenize(a)
         words=[word for word in words if word not in stop_words]
@@ -36,9 +37,11 @@ for line in lines:
             tag=taggedWord[1][:1]
             if(tag=='N' or tag=='V' or  tag=='J' or tag=='R' and tag!='RP'):
                 choices.append(taggedWord)
-        print("x",choices)
-    if(len(choices)==0):
-        continue
-    choice=random.choice(choices)
-    print(choice)
-    print("y",processTag(choice[1]))
+        if(len(choices)==0):
+            madlib=madlib+a
+            continue
+        choice=random.choice(choices)
+        madlib=madlib+a.replace(choice[0],'(%s)' %processTag(choice[1]))
+    madlib=madlib+'\n'
+
+print(madlib)
