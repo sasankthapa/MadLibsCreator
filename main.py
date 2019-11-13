@@ -4,8 +4,22 @@ from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
-#def playGame(madlib):
-
+def playGame(madlib):
+    toreturn=""
+    for line in madlib.splitlines():
+        line=line.strip()
+        sentences=sent_tokenize(line)
+        for sentence in sentences:
+            if('(' in sentence):
+                tag=sentence[sentence.find('(')+1:sentence.find(')')]
+                word=input(sentence)
+                toreturn=toreturn + sentence.replace('(%s)'%tag,word)+' '
+            else:
+                toreturn=toreturn+sentence+' '
+        toreturn=toreturn+'\n'
+    os.system('cls' if os.name=='nt' else 'clear')
+    return toreturn
+    
 def initializeStopWords():
     global stop_words
     stop_words=set(stopwords.words("english"))
@@ -41,7 +55,8 @@ for line in lines:
             madlib=madlib+a
             continue
         choice=random.choice(choices)
-        madlib=madlib+a.replace(choice[0],'(%s)' %processTag(choice[1]))
+        madlib=madlib+a.replace(choice[0],'(%s)' %processTag(choice[1]))+' '
     madlib=madlib+'\n'
 
-print(madlib)
+os.system('cls' if os.name=='nt' else 'clear')
+print(playGame(madlib))
